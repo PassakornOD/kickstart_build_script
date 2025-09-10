@@ -6,16 +6,10 @@
 # @                                                                 @
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 VAR_FILE="variable.conf"
-FUNC_FILE="pre-sutup_function.sh"
-if [ ! -f "$FUNC_FILE" ]; then
-    echo "$FUNC_FILE not found!"
-    exit 1
-fi
 if [ ! -f "$VAR_FILE" ]; then
     echo "$VAR_FILE not found!"
     exit 1
 fi
-source "$FUNC_FILE"
 source "$VAR_FILE"
 
 # Start check for setup environment
@@ -126,7 +120,7 @@ if [[ $(yum repolist -v 2> /dev/null |grep -E "^Repo-id" |wc -l) -gt 0 ]]; then
     echo | tee -a "$LOG_FILE"
 else
     echo "There are 0 repo(s) available." | tee -a "$LOG_FILE"
-    sed -i '/^ENABLE_REPO=.*/ENABLE_REPO=0/' ${VAR_FILE}
+    sed -i 's/^ENABLE_REPO=.*/ENABLE_REPO=0/' ${VAR_FILE}
     echo | tee -a "$LOG_FILE"
     echo "repo is not available."
 fi
