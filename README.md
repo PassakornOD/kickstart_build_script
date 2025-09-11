@@ -18,6 +18,7 @@ ks_script/<br>
    ├── setup-kickstart.sh   &nbsp;&nbsp;&nbsp;&nbsp;     # Main automation script<br> 
    ├── ks_function.sh       &nbsp;&nbsp;&nbsp;&nbsp;     # Function automation script<br> 
    └── pre-setup-kickstart.sh  &nbsp;&nbsp;&nbsp;&nbsp;  # Pre-check for setup kickstart
+   
 ---
 
 ## ⚡ Quick Start Guide
