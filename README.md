@@ -62,15 +62,3 @@ The script automates the following steps:
 ---
 
 ## 📂 Project Structure
-<<<<<<< HEAD
-
-   
-=======
-kickstart_build_script/<br>
-├── README.md<br> 
-├── ks_script   &nbsp;       # directory automation script<br> 
-   ├── ks.cfg                    # Kickstart file (customizable)<br> 
-   ├── setup-kickstart.sh        # Main automation script<br> 
-   ├── ks_function.sh            # Function automation script<br> 
-   └── pre-setup-kickstart.sh    # Pre-check for setup kickstart
->>>>>>> a8e0081 (update readme)
