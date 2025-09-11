@@ -11,6 +11,43 @@ It is intended for developers, system engineers, and DevOps who need to:
 
 ---
 
+## 📂 Script Structure
+
+ks_script/<br>
+   ├── variable.env   &nbsp;&nbsp;&nbsp;&nbsp;           # variable for script<br> 
+   ├── setup-kickstart.sh   &nbsp;&nbsp;&nbsp;&nbsp;     # Main automation script<br> 
+   ├── ks_function.sh       &nbsp;&nbsp;&nbsp;&nbsp;     # Function automation script<br> 
+
+---
+
+## ⚡ Quick Start Guide
+
+### 1. Prepare RHEL Repository
+If the server does **not** have access to official Red Hat repos, you can:
+- Upload the RHEL8 ISO to the server, or
+- Mount the ISO via optical drive
+
+This ISO will be used as the local package repo.
+
+### 2. Copy Files to Server
+- Copy the desired **RHEL8 ISO** version to the server  
+- Copy the `ks_script/` directory to the Kickstart server
+
+### 3. Configure Script
+- Edit `variable.env` to match your environment (e.g. ISO path, web root, server IP)
+
+### 4. Set Permission
+```bash
+chmod +x ks_script/*.sh
+```
+
+### 5. Run the Script
+```bash
+./setup-kickstart.sh
+```
+
+<!-- ---
+
 ## ⚙️ How It Works
 
 The script automates the following steps:
@@ -66,7 +103,7 @@ The script automates the following steps:
 kickstart_build_script/<br>
 ├── README.md<br> 
 ├── ks_script   &nbsp;&nbsp;&nbsp;&nbsp;       # directory automation script<br> 
-   ├── ks.cfg   &nbsp;&nbsp;&nbsp;&nbsp;                 # Kickstart file (customizable)<br> 
+   ├── variable.env   &nbsp;&nbsp;&nbsp;&nbsp;           # variable for script<br> 
    ├── setup-kickstart.sh   &nbsp;&nbsp;&nbsp;&nbsp;     # Main automation script<br> 
    ├── ks_function.sh       &nbsp;&nbsp;&nbsp;&nbsp;     # Function automation script<br> 
-   └── pre-setup-kickstart.sh  &nbsp;&nbsp;&nbsp;&nbsp;  # Pre-check for setup kickstart
+   └── pre-setup-kickstart.sh  &nbsp;&nbsp;&nbsp;&nbsp;  # Pre-check for setup kickstart -->
