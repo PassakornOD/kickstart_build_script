@@ -65,8 +65,8 @@ The script automates the following steps:
 
 kickstart_build_script/<br>
 ├── README.md<br> 
-├── ks_script   &nbsp;       # directory automation script<br> 
-   ├── ks.cfg                    # Kickstart file (customizable)<br> 
-   ├── setup-kickstart.sh        # Main automation script<br> 
-   ├── ks_function.sh            # Function automation script<br> 
-   └── pre-setup-kickstart.sh    # Pre-check for setup kickstart
+├── ks_script   &nbsp;&nbsp;&nbsp;&nbsp;       # directory automation script<br> 
+   ├── ks.cfg   &nbsp;&nbsp;&nbsp;&nbsp;                 # Kickstart file (customizable)<br> 
+   ├── setup-kickstart.sh   &nbsp;&nbsp;&nbsp;&nbsp;     # Main automation script<br> 
+   ├── ks_function.sh       &nbsp;&nbsp;&nbsp;&nbsp;     # Function automation script<br> 
+   └── pre-setup-kickstart.sh  &nbsp;&nbsp;&nbsp;&nbsp;  # Pre-check for setup kickstart
