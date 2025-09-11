@@ -17,6 +17,7 @@ ks_script/
    ├── variable.env          # variable for script
    ├── setup-kickstart.sh        # Main automation script
    ├── ks_function.sh            # Function automation script
+   ├── rhel-8.10-x86_64-dvd.iso  # ISO for UEFI network boot
    └── pre-setup-kickstart.sh    # Pre-check for setup kickstart
 ```
 
