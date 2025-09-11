@@ -14,9 +14,9 @@ It is intended for developers, system engineers, and DevOps who need to:
 ## 📂 Script Structure
 ```
 ks_script/
-   ├── variable.env          # variable for script<br> 
-   ├── setup-kickstart.sh        # Main automation script<br> 
-   ├── ks_function.sh            # Function automation script<br> 
+   ├── variable.env          # variable for script
+   ├── setup-kickstart.sh        # Main automation script
+   ├── ks_function.sh            # Function automation script
    └── pre-setup-kickstart.sh    # Pre-check for setup kickstart
 ```
 
