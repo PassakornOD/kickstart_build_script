@@ -21,7 +21,7 @@ clear
 # @                                                                   @
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # Define the path to your configuration file
-VAR_FILE="./variable.conf"
+VAR_FILE="./variable.env"
 
 call_env() {
     local file_path="$1"

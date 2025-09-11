@@ -5,7 +5,7 @@
 # @                 STRAT CALL VERIABLE FROM FILE                   @
 # @                                                                 @
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-VAR_FILE="variable.conf"
+VAR_FILE="variable.env"
 if [ ! -f "$VAR_FILE" ]; then
     echo "$VAR_FILE not found!"
     exit 1
