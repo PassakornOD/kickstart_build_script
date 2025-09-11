@@ -64,7 +64,7 @@ The script automates the following steps:
 ## 📂 Project Structure
 kickstart_build_script/<br>
 ├── README.md<br> 
-├── ks_script      "\t"       # directory automation script<br> 
+├── ks_script      \t       # directory automation script<br> 
    ├── ks.cfg                    # Kickstart file (customizable)<br> 
    ├── setup-kickstart.sh        # Main automation script<br> 
    ├── ks_function.sh            # Function automation script<br> 
