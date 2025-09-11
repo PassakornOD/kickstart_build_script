@@ -32,6 +32,9 @@ If the server does **not** have access to official Red Hat repos, you can:
 
 This ISO will be used as the local package repo.
 
+**Note**
+For UEFI boot servers, dhcp, httpd/tftp services are required. If they are not already installed, the script will attempt to install them. In this case, a source media (e.g., RHEL ISO) must be available to configure a local repository. If a repository is already available, you can specify it so the script can use it for package installation.
+
 ### 2. Copy Files to Server
 - Copy the desired **RHEL8 ISO** version to the server  
 - Copy the `ks_script/` directory to the Kickstart server
