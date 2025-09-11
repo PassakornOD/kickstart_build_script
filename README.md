@@ -12,13 +12,14 @@ It is intended for developers, system engineers, and DevOps who need to:
 ---
 
 ## 📂 Script Structure
-
+```
 ks_script/<br>
    ├── variable.env   &nbsp;&nbsp;&nbsp;&nbsp;           # variable for script<br> 
    ├── setup-kickstart.sh   &nbsp;&nbsp;&nbsp;&nbsp;     # Main automation script<br> 
    ├── ks_function.sh       &nbsp;&nbsp;&nbsp;&nbsp;     # Function automation script<br> 
    └── pre-setup-kickstart.sh  &nbsp;&nbsp;&nbsp;&nbsp;  # Pre-check for setup kickstart
-   
+```
+
 ---
 
 ## ⚡ Quick Start Guide
