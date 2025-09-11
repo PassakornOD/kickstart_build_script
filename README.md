@@ -62,7 +62,7 @@ The script automates the following steps:
 ---
 
 ## 📂 Project Structure
-kickstart_build_script/
+kickstart_build_script/<br>
 ├── README.md 
 ├── ks_script             # directory automation script
    ├── ks.cfg                    # Kickstart file (customizable)
