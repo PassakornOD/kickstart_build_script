@@ -59,7 +59,6 @@ if [ ! -f ${FUNC_SCRIPT} ]; then
     echo "$FUNC_SCRIPT not found!"
     exit 1
 fi
-if {}
 
 source $FUNC_SCRIPT
 
@@ -78,31 +77,57 @@ cat << EOF
 @                                                                   @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 EOF
-if [[ ${HTTP_FLAGS} -ne 0 || ${DHCP_FLAGS} -ne 0 || ${TFTP_FLAGS} -ne 0 ]]; then
-    if [[ ${ENABLE_REPO} -eq 0 ]]; then
-        echo "Repo is not already"
-        echo "Please Configure repo"
-        read -p "mount optical drive is ${CDROM}: " OPICAL_DRIVE
-        read -p  "mount point for mount ${CDROM} is ${MOUNTPOINT_ISO_HOST}: " INPUT_MOUNT
-        if [ ! -z ${OPICAL_DRIVE} ]; then
-            CDROM=${OPICAL_DRIVE}
-            echo $CDROM
-        fi
-        if [ ! -z ${INPUT_MOUNT} ]; then
-            MOUNTPOINT_ISO_HOST=${INPUT_MOUNT}
-            echo $MOUNTPOINT_ISO_HOST
-        fi
-        # Create mount point directory for ISO
-        echo "Attempting to create a new directory..."
-        create_directory ${MOUNTPOINT_ISO_HOST}
-        echo "Exit code: $?"
-        echo "-------------------"
 
-        # The mount command requires root privileges.
-        # The 'loop' option is essential for mounting an ISO file.
-        mount_iso "${ISO_FILE_HOST}" "${MOUNTPOINT_ISO_HOST}"
-        CreateLocalRepo "${REPO_CONF_PATH}" "${DIR_HOST_VERSION}" "${DIR_ISO_ROOT}"
-    fi
+if [[ ${HTTP_FLAGS} -ne 0 || ${DHCP_FLAGS} -ne 0 || ${TFTP_FLAGS} -ne 0 ]]; then
+
+    # prompt for choose existing repo and mount iso
+    echo "Choose repository setup method:"
+    echo "1. Use existing repository"
+    echo "2. Mount ISO and create new repository"
+    read -p "Enter your choice (1 or 2): " REPO_CHOICE
+
+    case "$REPO_CHOICE" in
+        1)
+            read -p "Enter your repository path: " EXIST_PATH
+            if [ -z "$(ls -A ${EXIST_PATH})" ]; then
+                echo "Please check your repository path. directory are empty"
+                exit 1 
+            fi
+            MOUNTPOINT_ISO_HOST=${EXIST_PATH}
+            repo_id=$(yum repolist -v 2> /dev/null|grep -E "Repo-baseurl" |grep -E "${MOUNTPOINT_ISO_HOST}/" |wc -l)
+            if [[ ${ENABLE_REPO} -ge 2 && ${repo_id} -ge 2 ]]; then
+                echo "Create local repo"
+                CreateLocalRepo "${REPO_CONF_PATH}" "${DIR_HOST_VERSION}" "${MOUNTPOINT_ISO_HOST}"
+            fi
+            ;;
+        2)
+            read -p "mount optical drive is ${CDROM}: " OPICAL_DRIVE
+            read -p  "mount point for mount ${CDROM} is ${MOUNTPOINT_ISO_HOST}: " INPUT_MOUNT
+            if [ ! -z ${OPICAL_DRIVE} ]; then
+                CDROM=${OPICAL_DRIVE}
+                echo $CDROM
+            fi
+            if [ ! -z ${INPUT_MOUNT} ]; then
+                MOUNTPOINT_ISO_HOST=${INPUT_MOUNT}
+                echo $MOUNTPOINT_ISO_HOST
+            fi
+            # Create mount point directory for ISO
+            echo "Attempting to create a new directory..."
+            create_directory ${MOUNTPOINT_ISO_HOST}
+            echo "Exit code: $?"
+            echo "-------------------"
+
+            # The mount command requires root privileges.
+            # The 'loop' option is essential for mounting an ISO file.
+            mount_iso "${ISO_FILE_HOST}" "${MOUNTPOINT_ISO_HOST}"
+            CreateLocalRepo "${REPO_CONF_PATH}" "${DIR_HOST_VERSION}" "${MOUNTPOINT_ISO_HOST}"
+            ;;
+        *)
+            echo "Invalid choice. Please enter 1 or 2."
+            exit 1
+            ;;
+    esac
+
 
     # Call function to install packages
     InstallPackages "$HTTP_PACKAGE"
@@ -114,13 +139,13 @@ else
 cat << EOF
 Result:
 
-${HTTP_PACKAGE} Package ard installed
+${HTTP_PACKAGE} Package are installed
 Skip install......
 
-${TFTP_PACKAGE} Package ard installed
+${TFTP_PACKAGE} Package are installed
 Skip install......
 
-${DHCP_PACKAGE} Package ard installed
+${DHCP_PACKAGE} Package are installed
 Skip install......
 
 EOF
@@ -147,6 +172,7 @@ EOF
 # Call the prompt function for create repository
 read -p "Please enter ISO file for kickstart repo(Default: ${ISO_PATH}): " INPUT_ISO_PATH
 read -p "Please enter mount point name for kickstart repo(Default: ${MOUNTPOINT_ISO_KS})" INPUT_MOUNT_KS
+echo
 
 if [ ! -z ${INPUT_ISO_PATH} ]; then
     ISO_PATH=${INPUT_ISO_PATH}
@@ -186,7 +212,7 @@ ln -s ${MOUNTPOINT_HTTP_ROOT} ${DIR_KS_VERSION}
 echo "Symbolic link created."
 echo "--------------------------------" 
 cd $current_path
-pwd
+
 
 # Create kickstart file
 #syntax command
@@ -210,7 +236,6 @@ read -r choice
 
 case $choice in
     1)
-# Start option 1
         cat << EOF
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                   @
@@ -234,7 +259,6 @@ EOF
         ;;
 
     2)
-# Start option 1
         cat << EOF
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @                                                                   @
@@ -263,13 +287,28 @@ EOF
         ;;
 esac
 
+cat << EOF
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@                                                                   @
+@                Allow firewall for http, tftp and dhcp             @
+@                                                                   @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+EOF
 # Allow firewall for http, tftp and dhcp service
 for service in "http" "tftp" "dhcp"; do
     EnableServiceOnFW "$service"
 done
+echo "Firewall reloading..."
 firewall-cmd --reload
+echo
 
-
+cat << EOF
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@                                                                   @
+@          enable and start service for http, tftp and dhcp         @
+@                                                                   @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+EOF
 # Enable and start httpd, tftp and dhcpd
 for service in "httpd" "tftp.socket" "dhcpd"; do
     StartService "${service}"

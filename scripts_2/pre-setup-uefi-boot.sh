@@ -109,6 +109,8 @@ Check package result:
 Repository result:
 EOF
 
+#clean status repo
+yum clean all &> /dev/null
 if [[ $(yum repolist -v 2> /dev/null |grep -E "^Repo-id" |wc -l) -gt 0 ]]; then
     ENABLE_REPO=$(yum repolist -v 2> /dev/null|grep -E "^Repo-id" |wc -l)
     echo "There are $ENABLE_REPO repo(s) available." | tee -a "$LOG_FILE"

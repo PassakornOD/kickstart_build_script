@@ -23,7 +23,7 @@ InstallPackages() {
         else
             echo "Failed to install packages. Please check your internet connection and repository configuration."
             return 1
-    fi
+        fi
     fi
 }
 
@@ -125,41 +125,45 @@ mount_iso() {
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # Function to create a local repository configuration file
 CreateLocalRepo() {
-    local repo_path="$1"
+    local repo_conf_path="$1"
     local repo_version="$2"
-    local repo_mount="$3"
+    local repo_path="$3"
+    TIME_FORMAT="%Y%m%d%H%M%S"
+    TIMESTAMP=$(date +"$TIME_FORMAT")
     # Check if the repository file already exists
-    if [ -f "$repo_path/$repo_version.repo" ]; then
+    if [ -f "$repo_conf_path/$repo_version.repo" ]; then
         echo "Warning: Repository file $repo_version.repo already exists."
         echo "Backing up the existing file with a timestamp."
-        TIME_FORMAT="%Y%m%d%H%M%S"
-
-        # --- MAIN SCRIPT ---
-        # Get the current date and time in the specified format.
-        TIMESTAMP=$(date +"$TIME_FORMAT")
 
         # Create the full file name.
-        cp "${repo_path}/${repo_version}.repo" "${repo_path}/${repo_version}.repo_${TIMESTAMP}"
+        cp "${repo_conf_path}/${repo_version}.repo" "${repo_conf_path}/${repo_version}.repo_${TIMESTAMP}"
     fi
 
     # Create the repository file 
-    echo "Creating repository file: $repo_path/$repo_version.repo"
-    cat << EOF | tee "$repo_path/$repo_version.repo" > /dev/null
+    echo "Creating repository file: $repo_conf_path/$repo_version.repo"
+    cat << EOF | tee "$repo_conf_path/$repo_version.repo" > /dev/null
 [BaseOS]
 name=${repo_version}-BaseOS
-baseurl=file:///${repo_mount}/${repo_version}/BaseOS
+baseurl=file://${repo_path}/BaseOS
 enabled=1
 gpgcheck=0
 [AppStream]
 name=${repo_version}-AppStream
-baseurl=file:///${repo_mount}/${repo_version}/AppStream
+baseurl=file://${repo_path}/AppStream
 enabled=1
 gpgcheck=0
 EOF
 
+    # Use 'diff --brief' to quickly check for differences without printing them.
+    # We redirect the output to /dev/null because we only care about the exit status.
+    if diff --brief "${repo_conf_path}/${repo_version}.repo" "${repo_conf_path}/${repo_version}.repo_${TIMESTAMP}" >/dev/null; then
+        echo "${repo_conf_path}/${repo_version}.repo and ${repo_conf_path}/${repo_version}.repo_${TIMESTAMP} have same content"
+        rm -rf ${repo_conf_path}/${repo_version}.repo_${TIMESTAMP}
+    fi
+
     echo "--------------------------------"
-    echo "Repository file created at $repo_path/$repo_version.repo"
-    cat "$repo_path/$repo_version.repo"
+    echo "Repository file created at $repo_conf_path/$repo_version.repo"
+    cat "$repo_conf_path/$repo_version.repo"
     echo "--------------------------------"
 
     # Verify the file was created
@@ -473,10 +477,12 @@ GetVersion() {
 EnableServiceOnFW() {
     local service="$1"
     if firewall-cmd --query-service="${service}" &> /dev/null; then
-        echo "Service ${service} are allowed."
+        echo "Service ${service} are allowed..."
+        echo
     else
         echo "firewall-cmd --add-service="${service}" --permanent"
         firewall-cmd --add-service="${service}" --permanent
+        echo
     fi
 }
 
@@ -489,8 +495,11 @@ StartService() {
     local service="$1"
     if systemctl is-enabled --quiet "${service}"; then
         echo "Service ${service} is already enabled."
+
     else
+        echo "Attempting to enable ${service} service..."
         systemctl enable "${service}"
+
     fi
 
     if systemctl is-active --quiet "${service}"; then
@@ -507,6 +516,7 @@ StartService() {
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "Service ${service} restarting..."
             systemctl restart ${service}
+            echo
         elif [[ $REPLY =~ ^[Nn]$ ]]; then
             echo "Skip for restart service ${service}"
             exit 1
@@ -516,6 +526,8 @@ StartService() {
             exit 1
         fi
     else
+        echo "Attempting to start ${service} service..."
         systemctl start "${service}"
+        echo
     fi
 }
