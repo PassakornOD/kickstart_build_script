@@ -1,0 +1,2 @@
+﻿OS,Version,ks_iso_file,Subnet,Netmask,IP_server,Gateway,Start_range,End_range
+rhel,8.10,rhel-8.10-x86_64-dvd.iso,10.4.179.0,255.255.255.0,10.4.179.134,10.4.179.1,10.4.179.136,10.4.179.138
