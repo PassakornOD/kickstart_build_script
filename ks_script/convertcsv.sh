@@ -1,5 +1,7 @@
 #!/bin/bash
 
+OUTPUT_FILE="./variable.env"
+
 read -p "Enter your csv path: " path_csv
 CSV_FILE="./my_var.csv"
 
@@ -27,7 +29,7 @@ do
     CORE_VER=$(echo ${OS_VER}|awk -F"." '{print $1}')
 
 
-cat << EOF > "./temp.env"
+cat << EOF > ${OUTPUT_FILE}
 #variable for kickstart_build_script
 # Define variables for network boot configuration
 # Configurable parameters
@@ -42,7 +44,7 @@ DIR_IOS_KS="/root"
 OS_VERSION_HOST=""
 MAIN_VERSION_HOST=""
 OS_SHORT_HOST=""
-ISO_FILE_HOST=${CDROM}
+ISO_FILE_HOST=\${CDROM}
 HTTP_DIR="repos"
 ARCH="x86_64"
 REPO_CONF_PATH="/etc/yum.repos.d"
@@ -63,15 +65,14 @@ GATEWAY=${GW}
 SERVER_IP=${IP_SERVER}
 START_RANGE=${S_RANGE}
 END_RANGE=${E_RANGE}
-ISO_PATH="${DIR_IOS_KS}/${ISO_FILE_KS}"
-DIR_HOST_VERSION="${OS_SHORT_HOST}${OS_VERSION_HOST}"
-DIR_KS_VERSION="${OS_SHORT_KS}${OS_VERSION_KS}"
-DIR_ISO_ROOT="${OS_SHORT_KS}${MAIN_VERSION_KS}"
+ISO_PATH="\${DIR_IOS_KS}/\${ISO_FILE_KS}"
+DIR_HOST_VERSION="\${OS_SHORT_HOST}\${OS_VERSION_HOST}"
+DIR_KS_VERSION="\${OS_SHORT_KS}\${OS_VERSION_KS}"
+DIR_ISO_ROOT="\${OS_SHORT_KS}\${MAIN_VERSION_KS}"
 # Path
-MOUNTPOINT_ISO_HOST="/${DIR_ISO_ROOT}/${DIR_HOST_VERSION}"
-MOUNTPOINT_ISO_KS="/${DIR_ISO_ROOT}/${DIR_KS_VERSION}"
-MOUNTPOINT_HTTP_ROOT="/${HTTP_DIR}/${DIR_ISO_ROOT}/${DIR_KS_VERSION}"
-
+MOUNTPOINT_ISO_HOST="/\${DIR_ISO_ROOT}/\${DIR_HOST_VERSION}"
+MOUNTPOINT_ISO_KS="/\${DIR_ISO_ROOT}/\${DIR_KS_VERSION}"
+MOUNTPOINT_HTTP_ROOT="/\${HTTP_DIR}/\${DIR_ISO_ROOT}/\${DIR_KS_VERSION}"
 EOF
 done 
 
