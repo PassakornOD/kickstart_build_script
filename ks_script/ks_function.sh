@@ -6,22 +6,24 @@
 
 InstallPackages() {
     local packages="$1"
-    echo "--- Checking for httpd package installation ---"
     # Check if the httpd package is installed using dnf
     # yum is the default package manager for RHEL 8
     if yum list --installed $packages &> /dev/null; then
-        echo "----------------------------------------------------------------------------"
-        echo "$packages package is already installed."
+        echo
+        echo "Package: $packages "
+        echo "Details of installed package:"
         echo "----------------------------------------------------------------------------"
         yum list installed $packages
-        echo "----------------------------------------------------------------------------"
+        echo "============================================================================"
     else
         echo "Attempting to install: $packages"
         if yum install -y $packages; then
             echo "Successfully installed packages."
+            echo "============================================================================"
             return 0
         else
             echo "Failed to install packages. Please check your internet connection and repository configuration."
+            echo "============================================================================"
             return 1
         fi
     fi
@@ -174,7 +176,6 @@ EOF
         echo "--------------------------------"
         echo "Refreshing yum repository list..."
         yum repolist
-        echo "Script finished."
     else
         echo "Failed to create the repository file. Check permissions."
         exit 1
@@ -494,15 +495,20 @@ EnableServiceOnFW() {
 StartService() {
     local service="$1"
     if systemctl is-enabled --quiet "${service}"; then
+        echo "Enable ${service} service..."
         echo "Service ${service} is already enabled."
+        echo
 
     else
+        echo "Enable ${service} service..."
         echo "Attempting to enable ${service} service..."
         systemctl enable "${service}"
+        echo
 
     fi
 
     if systemctl is-active --quiet "${service}"; then
+        echo "Start ${service} service..."
         echo "Service ${service} is already running."
         TIMEOUT=20 # seconds
         echo "Service ${service} is running. Are you restart ${service}?"
@@ -519,15 +525,17 @@ StartService() {
             echo
         elif [[ $REPLY =~ ^[Nn]$ ]]; then
             echo "Skip for restart service ${service}"
-            exit 1
+            echo
         else
             # If read times out or user presses a different key
             echo "Timeout reached or invalid input. Operation cancelled."
             exit 1
         fi
     else
+        echo "Start ${service} service..."
         echo "Attempting to start ${service} service..."
         systemctl start "${service}"
         echo
     fi
+    echo "============================================================="
 }

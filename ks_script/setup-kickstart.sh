@@ -6,7 +6,7 @@ clear
 # @                     INCLUDE SCRIPT FOR PRE-CHECK                  @
 # @                                                                   @
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-PRESETUP_FILE="./pre-setup-uefi-boot.sh"
+PRESETUP_FILE="./pre-setup-kickstart.sh"
 if [ ! -f "$PRESETUP_FILE" ]; then
     echo "$PRESETUP_FILE not found!"
     exit 1
@@ -96,7 +96,7 @@ if [[ ${HTTP_FLAGS} -ne 0 || ${DHCP_FLAGS} -ne 0 || ${TFTP_FLAGS} -ne 0 ]]; then
             MOUNTPOINT_ISO_HOST=${EXIST_PATH}
             repo_id=$(yum repolist -v 2> /dev/null|grep -E "Repo-baseurl" |grep -E "${MOUNTPOINT_ISO_HOST}/" |wc -l)
             if [[ ${ENABLE_REPO} -ge 2 && ${repo_id} -ge 2 ]]; then
-                echo "Create local repo"
+                echo "Create local repository are already configured."
                 CreateLocalRepo "${REPO_CONF_PATH}" "${DIR_HOST_VERSION}" "${MOUNTPOINT_ISO_HOST}"
             fi
             ;;
@@ -170,8 +170,8 @@ cat << EOF
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 EOF
 # Call the prompt function for create repository
-read -p "Please enter ISO file for kickstart repo(Default: ${ISO_PATH}): " INPUT_ISO_PATH
-read -p "Please enter mount point name for kickstart repo(Default: ${MOUNTPOINT_ISO_KS})" INPUT_MOUNT_KS
+read -p "Please enter ISO file for kickstart repo(Default: ${ISO_PATH}) : " INPUT_ISO_PATH
+read -p "Please enter mount point name for kickstart repo(Default: ${MOUNTPOINT_ISO_KS}) :" INPUT_MOUNT_KS
 echo
 
 if [ ! -z ${INPUT_ISO_PATH} ]; then

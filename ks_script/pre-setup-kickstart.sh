@@ -41,10 +41,11 @@ is_package_installed() {
 
 check_install_status() {
     local flag="$1"
+    local package_name="$2"
     if [ "$flag" -ne 0 ]; then
-        echo "Please install the missing package(s) and try again."
+        echo "Package '$package_name' is not installed..."
     else
-        echo "All required packages are installed."
+        echo "Package '$package_name' is installed..."
     fi
 }
 
@@ -76,21 +77,21 @@ echo
 echo "Check package: $HTTP_PACKAGE"
 HTTP_FLAGS=$(is_package_installed $HTTP_PACKAGE; echo $?)
 sed -i "s/^HTTP_FLAGS=.*/HTTP_FLAGS=${HTTP_FLAGS}/" "$VAR_FILE"
-check_install_status $HTTP_FLAGS
+check_install_status $HTTP_FLAGS $HTTP_PACKAGE
 echo "--------------------------------------------------------------------"
 echo
 
 echo "Check package: $TFTP_PACKAGE"
 TFTP_FLAGS=$(is_package_installed $TFTP_PACKAGE; echo $?)
 sed -i "s/^TFTP_FLAGS=.*/TFTP_FLAGS=${TFTP_FLAGS}/" "$VAR_FILE"
-check_install_status $TFTP_FLAGS
+check_install_status $TFTP_FLAGS $TFTP_PACKAGE
 echo "--------------------------------------------------------------------"
 echo
 
 echo "Check package: $DHCP_PACKAGE"
 DHCP_FLAGS=$(is_package_installed $DHCP_PACKAGE; echo $?)
 sed -i "s/^DHCP_FLAGS=.*/DHCP_FLAGS=${DHCP_FLAGS}/" "$VAR_FILE"
-check_install_status $DHCP_FLAGS
+check_install_status $DHCP_FLAGS $DHCP_PACKAGE
 echo "--------------------------------------------------------------------"
 echo
 
