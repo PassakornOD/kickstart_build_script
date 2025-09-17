@@ -9,6 +9,8 @@ It is intended for developers, system engineers, and DevOps who need to:
 - Integrate `kickstart.cfg` with UEFI bootloaders
 - Deploy installation images via HTTP/PXE servers
 
+>[!Note]
+> this script support UEFI network boot server for rhel/rocky 8 and above version
 ---
 
 ## 📂 Script Structure
